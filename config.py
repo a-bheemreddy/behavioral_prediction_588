@@ -33,11 +33,9 @@ MUST PROVIDE:
 11: initial_state(measurement) = 
      function which provides initial state, given just the first observation
      measurement is vector of size (dim_z). Output is vector of size (dim_x)
-      
-
-OPTIONAL:
-
 '''
+
+### This is a sample config, where the state is [x,y,vel_x,vel_y], and the measurements are [x,y]
 
 # state is vector with [x,y,vel_x, vel_y]
 dim_x = 4
