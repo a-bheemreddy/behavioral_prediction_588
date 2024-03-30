@@ -3,8 +3,8 @@ from scipy.optimize import linear_sum_assignment
 import numpy as np
 
 # Initialize Kalman filters for each pedestrian
-# '##' is special key, which stores highest ID of pedestrain
-kalman_filters = {'##':0}
+kalman_filters = {}
+max_id = 0
 
 def update_pedestrian_tracking(bounding_boxes):
     
@@ -26,6 +26,7 @@ def update_pedestrian_tracking(bounding_boxes):
     matched_bboxes = set()
     for pedestrian_id, bbox_idx in matches:
         kalman_filters[pedestrian_id].update(bounding_boxes[bbox_idx])
+        kalman_filters[pedestrian_id].time_since_update = 0
         matched_pedestrians.add(pedestrian_id)
         matched_bboxes.add(bbox_idx)
         
@@ -113,9 +114,9 @@ def create_kalman_filter(bounding_box):
     
     return kalman_filter
 
-def generate_new_pedestrian_id(kalman_filters):
-    kalman_filters['##'] += 1
-    return str(kalman_filters['##'])
+def generate_new_pedestrian_id():
+    max_id += 1
+    return str(max_id)
 
 def delete_old_tracks(kalman_filters, max_age):
     to_delete = []
