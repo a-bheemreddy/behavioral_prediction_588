@@ -14,15 +14,15 @@ class KalmanTracker:
                
         self.dim_x = config.dim_x
         self.dim_z = config.dim_z
-        self.F_mat = config.F
-        self.H_mat = config.H
-        self.P_mat = config.P
-        self.Q_mat = config.Q
-        self.R_mat = config.R
+        self.F = config.F
+        self.H = config.H
+        self.P = config.P
+        self.Q = config.Q
+        self.R = config.R
         self.max_age = config.max_age
         self.threshold = config.threshold
         self.cost_function = config.cost_function
-        self.init_state_function = config.initial_state
+        self.initial_state = config.initial_state
     
     # Must be called in loop to continuously update all tracked objects
     # bounding_boxes are just the list of measurements/observations/sensor readings
@@ -42,7 +42,7 @@ class KalmanTracker:
         # Update matched pedestrians
         matched_pedestrians = set()
         matched_bboxes = set()
-        for pedestrian_id, bbox_idx in matches:
+        for pedestrian_id, bbox_idx in matches.items():
             self.kalman_filters[pedestrian_id].update(bounding_boxes[bbox_idx])
             self.kalman_filters[pedestrian_id].time_since_update = 0
             matched_pedestrians.add(pedestrian_id)
