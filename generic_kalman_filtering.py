@@ -32,7 +32,7 @@ def update_pedestrian_tracking(bounding_boxes):
     # Update matched pedestrians
     matched_pedestrians = set()
     matched_bboxes = set()
-    for pedestrian_id, bbox_idx in matches:
+    for pedestrian_id, bbox_idx in matches.items():
         kalman_filters[pedestrian_id].update(bounding_boxes[bbox_idx])
         kalman_filters[pedestrian_id].time_since_update = 0
         matched_pedestrians.add(pedestrian_id)
