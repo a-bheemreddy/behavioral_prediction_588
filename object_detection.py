@@ -8,17 +8,17 @@ import numpy as np
 def convert_npy_to_kitti(npy_file):
     # Load the LiDAR points from the .npy file
     points = np.load(npy_file)
-    
+    default_reflectance = 1
+    data = np.hstack([points['arr_0'], default_reflectance * np.ones((len(points['arr_0']), 1))])
     # Create a dictionary to hold the point cloud data
-    data = {
-        'type': 'LiDAR',
-        'velodyne_path': 'placeholder_path',  # Placeholder path, since the data is loaded from .npy file
-        'velodyne_points': points,
-        'sample_idx': 0,  # Dummy sample index
-        # 'boxes_3d_lidar': LiDARInstance3DBoxes(np.array([[0, 0, 0, 1, 1, 1, 0]])),  # Dummy boxes, replace if needed
-        # 'gt_names': np.array(['Car']),  # Dummy class names, replace if needed
-    }
-    
+    # data = {
+    #     'type': 'LiDAR',
+    #     'velodyne_path': 'placeholder_path',  # Placeholder path, since the data is loaded from .npy file
+    #     'velodyne_points': points,
+    #     'sample_idx': 0,  # Dummy sample index
+    #     # 'boxes_3d_lidar': LiDARInstance3DBoxes(np.array([[0, 0, 0, 1, 1, 1, 0]])),  # Dummy boxes, replace if needed
+    #     # 'gt_names': np.array(['Car']),  # Dummy class names, replace if needed
+    # }
     return data
 
 # Example usage
@@ -34,9 +34,11 @@ model = init_model(config_file, checkpoint_file, device='cpu')  # Use 'cpu' if G
 
 # Step 3: Perform inference on your custom LiDAR data
 result, data = inference_detector(model, kitti_data)
-
-# Process detection results
-for pred_dict in result:
-    # Print the predicted bounding boxes and scores
-    print(pred_dict['boxes_3d'])
-    print(pred_dict['scores_3d'])
+print("Boxes:", result.pred_instances_3d.bboxes_3d.tensor)
+print("Scores:", result.pred_instances_3d.scores_3d)
+print("Labels:", result.pred_instances_3d.labels_3d)
+# # Process detection results
+# for pred_dict in result:
+#     # Print the predicted bounding boxes and scores
+#     print(pred_dict['boxes_3d'])
+#     print(pred_dict['scores_3d'])
