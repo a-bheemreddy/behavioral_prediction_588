@@ -4,25 +4,45 @@ import numpy as np
 import importlib.util
 
 class KalmanTracker:
-    def __init__(self, config_file_path):
-        spec = importlib.util.spec_from_file_location("config", config_file_path)
-        config = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(config)
+    def __init__(self, config_file_path=None, \
+                 dim_x=0, dim_z=0, F=None, H=None, P= None, Q=None, R=None, \
+                 max_age=None, cost_function=None, threshold=None, initial_state=None):
         
-        self.kalman_filters = {}
-        self.max_id = 0
-               
-        self.dim_x = config.dim_x
-        self.dim_z = config.dim_z
-        self.F = config.F
-        self.H = config.H
-        self.P = config.P
-        self.Q = config.Q
-        self.R = config.R
-        self.max_age = config.max_age
-        self.threshold = config.threshold
-        self.cost_function = config.cost_function
-        self.initial_state = config.initial_state
+        if config_file_path is not None:
+            spec = importlib.util.spec_from_file_location("config", config_file_path)
+            config = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(config)
+            
+            self.kalman_filters = {}
+            self.max_id = 0
+                
+            self.dim_x = config.dim_x
+            self.dim_z = config.dim_z
+            self.F = config.F
+            self.H = config.H
+            self.P = config.P
+            self.Q = config.Q
+            self.R = config.R
+            self.max_age = config.max_age
+            self.threshold = config.threshold
+            self.cost_function = config.cost_function
+            self.initial_state = config.initial_state
+            
+        else:
+            self.kalman_filters = {}
+            self.max_id = 0
+                
+            self.dim_x = dim_x
+            self.dim_z = dim_z
+            self.F = F
+            self.H = H
+            self.P = P
+            self.Q = Q
+            self.R = R
+            self.max_age = max_age
+            self.threshold = threshold
+            self.cost_function = cost_function
+            self.initial_state = initial_state
     
     # Must be called in loop to continuously update all tracked objects
     # bounding_boxes are just the list of measurements/observations/sensor readings
